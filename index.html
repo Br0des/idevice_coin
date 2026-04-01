@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>idevice Coin - The Future of Decentralized iOS</title>
+  <style>
+    :root {
+      --purple: #7c3aed;
+      --blue: #2563eb;
+      --cyan: #06b6d4;
+      --dark: #0a0a0f;
+      --card: #111118;
+      --border: rgba(124, 58, 237, 0.3);
+      --text: #e2e8f0;
+      --muted: #64748b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Canvas background ─────────────────────────────── */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── Nav ───────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo .coin-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      box-shadow: 0 0 16px rgba(124,58,237,0.6);
+      animation: spin-slow 8s linear infinite;
+    }
+
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #fff !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600 !important;
+      transition: opacity 0.2s !important;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── Ticker ────────────────────────────────────────── */
+    .ticker-bar {
+      position: fixed;
+      top: 65px; left: 0; right: 0;
+      z-index: 99;
+      background: rgba(10,10,15,0.92);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      height: 34px;
+      display: flex;
+      align-items: center;
+    }
+
+    .ticker-track {
+      display: flex;
+      gap: 3rem;
+      animation: ticker-scroll 20s linear infinite;
+      white-space: nowrap;
+    }
+
+    @keyframes ticker-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .ticker-item {
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .ticker-item .sym { color: var(--cyan); font-weight: 700; }
+    .ticker-item .up  { color: #22c55e; }
+    .ticker-item .dn  { color: #ef4444; }
+
+    /* ── Hero ──────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 2rem 4rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(124,58,237,0.15);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.8rem;
+      color: #a78bfa;
+      margin-bottom: 1.5rem;
+      animation: fade-up 0.6s ease both;
+    }
+
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      animation: fade-up 0.6s 0.1s ease both;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #c084fc, var(--cyan), #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      max-width: 600px;
+      margin: 1.5rem auto 0;
+      font-size: 1.15rem;
+      color: var(--muted);
+      line-height: 1.6;
+      animation: fade-up 0.6s 0.2s ease both;
+    }
+
+    .hero-price {
+      margin: 2.5rem 0;
+      animation: fade-up 0.6s 0.3s ease both;
+    }
+
+    .price-big {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .price-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(34,197,94,0.15);
+      color: #22c55e;
+      border-radius: 6px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fade-up 0.6s 0.4s ease both;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #fff;
+      border: none;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(124,58,237,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 50px rgba(124,58,237,0.6);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(124,58,237,0.1);
+      border-color: var(--purple);
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Fake Chart ────────────────────────────────────── */
+    .chart-section {
+      position: relative; z-index: 1;
+      padding: 3rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    #price-chart {
+      width: 100%;
+      height: 200px;
+      border-radius: 12px;
+      overflow: visible;
+    }
+
+    /* ── Stats row ─────────────────────────────────────── */
+    .stats-row {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.4rem;
+      transition: border-color 0.3s;
+    }
+
+    .stat-card:hover { border-color: var(--purple); }
+
+    .stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-value { font-size: 1.6rem; font-weight: 700; margin-top: 0.3rem; letter-spacing: -0.02em; }
+    .stat-sub   { font-size: 0.8rem; color: #22c55e; margin-top: 0.2rem; }
+
+    /* ── Section commons ───────────────────────────────── */
+    section {
+      position: relative; z-index: 1;
+      padding: 5rem 2rem;
+    }
+
+    .section-inner { max-width: 1000px; margin: 0 auto; }
+
+    .section-label {
+      text-align: center;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--purple);
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .section-desc {
+      text-align: center;
+      max-width: 540px;
+      margin: 0 auto 3rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ── About ─────────────────────────────────────────── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    @media (max-width: 700px) { .about-grid { grid-template-columns: 1fr; } }
+
+    .about-text h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .about-text p strong { color: var(--text); }
+
+    .terminal {
+      background: #0d0d14;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      background: #1a1a2e;
+      padding: 0.6rem 1rem;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .terminal-bar span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    .terminal-bar .r { background: #ef4444; }
+    .terminal-bar .y { background: #f59e0b; }
+    .terminal-bar .g { background: #22c55e; }
+    .terminal-title { font-size: 0.75rem; color: var(--muted); margin-left: auto; }
+
+    .terminal-body {
+      padding: 1.2rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.8;
+    }
+
+    .t-comment { color: #4ade80; }
+    .t-cmd     { color: #c084fc; }
+    .t-out     { color: var(--muted); }
+    .t-err     { color: #ef4444; }
+    .t-cursor  {
+      display: inline-block;
+      width: 8px; height: 1em;
+      background: var(--cyan);
+      animation: blink 1s step-end infinite;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* ── Tokenomics ────────────────────────────────────── */
+    .token-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .token-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.2s, border-color 0.3s;
+    }
+
+    .token-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--purple);
+    }
+
+    .token-pct {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .token-name {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    .token-bar {
+      height: 4px;
+      border-radius: 2px;
+      margin-top: 0.8rem;
+    }
+
+    /* ── Roadmap ───────────────────────────────────────── */
+    .roadmap {
+      position: relative;
+    }
+
+    .roadmap-items {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .roadmap-items::before {
+      content: '';
+      position: absolute;
+      left: calc(50% - 1px);
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--purple), transparent);
+      pointer-events: none;
+    }
+
+    .roadmap-item {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+
+    .rm-dot {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      box-shadow: 0 0 20px rgba(124,58,237,0.5);
+      z-index: 2;
+      justify-self: center;
+    }
+
+    .rm-content {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+    }
+
+    .rm-content h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .rm-content p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    .rm-quarter {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--purple);
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .rm-empty {}
+
+    @media (max-width: 640px) {
+      .roadmap-items::before { display: none; }
+      .roadmap-items { gap: 1.2rem; }
+      .roadmap-item { grid-template-columns: 40px 1fr; }
+      .rm-dot { order: 1; }
+      .rm-content { order: 2; }
+      .rm-empty { display: none; }
+    }
+
+    /* ── FAQ ───────────────────────────────────────────── */
+    .faq-list { max-width: 680px; margin: 0 auto; }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 0;
+    }
+
+    .faq-q {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      user-select: none;
+    }
+
+    .faq-q .chevron {
+      color: var(--purple);
+      transition: transform 0.3s;
+      flex-shrink: 0;
+      margin-left: 1rem;
+    }
+
+    .faq-item.open .chevron { transform: rotate(180deg); }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .faq-item.open .faq-a {
+      max-height: 300px;
+      padding-top: 0.8rem;
+    }
+
+    /* ── CTA ───────────────────────────────────────────── */
+    .cta-section {
+      padding: 5rem 2rem;
+    }
+
+    .cta-box {
+      max-width: 700px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(37,99,235,0.15));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .cta-box h2 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .cta-box p { color: var(--muted); margin-bottom: 2rem; line-height: 1.7; }
+
+    .email-form {
+      display: flex;
+      gap: 0.6rem;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .email-form input {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .email-form input:focus { border-color: var(--purple); }
+    .email-form input::placeholder { color: var(--muted); }
+
+    /* ── Footer ────────────────────────────────────────── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    footer strong { color: var(--text); }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .footer-links a { color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--purple); }
+
+    /* ── Countdown ─────────────────────────────────────── */
+    .countdown-row {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .cd-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.4rem;
+      text-align: center;
+      min-width: 70px;
+    }
+
+    .cd-num {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cd-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .disclaimer {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 1rem;
+      opacity: 0.6;
+    }
+
+    /* ── Fine print ────────────────────────────────────── */
+    .fine-print {
+      font-size: 0.62rem;
+      color: var(--muted);
+      opacity: 0.45;
+      line-height: 1.6;
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .fine-print.left { text-align: left; }
+
+    .fine-print a {
+      color: var(--muted);
+      text-decoration: underline;
+      cursor: default;
+    }
+
+    .rug-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.62rem;
+      color: var(--muted);
+      opacity: 0.45;
+      margin-top: 1.2rem;
+    }
+
+    .rug-table td {
+      padding: 0.25rem 0.5rem;
+      border-bottom: 1px solid rgba(124,58,237,0.08);
+    }
+
+    .rug-table td:last-child { text-align: right; }
+
+    /* ── Hamburger ─────────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── Mobile ────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      nav {
+        padding: 0.75rem 1.2rem;
+        flex-wrap: wrap;
+      }
+
+      .hamburger { display: flex; }
+
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        width: 100%;
+        padding-bottom: 0.75rem;
+        border-top: 1px solid var(--border);
+        margin-top: 0.75rem;
+      }
+
+      .nav-links.open { display: flex; }
+
+      .nav-links a {
+        padding: 0.6rem 0;
+        width: 100%;
+        border-bottom: 1px solid rgba(124,58,237,0.1);
+        font-size: 1rem;
+      }
+
+      .nav-cta {
+        margin-top: 0.5rem;
+        text-align: center;
+        border-radius: 8px;
+        border-bottom: none !important;
+      }
+
+      .ticker-bar { top: 53px; }
+
+      .hero { padding: 120px 1.2rem 3rem; }
+
+      .hero-btns { flex-direction: column; align-items: stretch; }
+      .hero-btns .btn-primary,
+      .hero-btns .btn-secondary,
+      .hero-btns a { text-align: center; justify-content: center; }
+
+      .countdown-row { gap: 0.6rem; }
+      .cd-box { padding: 0.7rem 0.9rem; min-width: 60px; }
+      .cd-num { font-size: 1.5rem; }
+
+      .stats-row { grid-template-columns: 1fr 1fr; padding: 0 1.2rem 3rem; }
+
+      section { padding: 3rem 1.2rem; }
+
+      .section-title { font-size: clamp(1.4rem, 6vw, 2.2rem); }
+
+      .token-grid { grid-template-columns: 1fr 1fr; }
+
+      .cta-box { padding: 1.5rem 1.2rem; }
+
+      .email-form { flex-direction: column; }
+      .email-form input, .email-form button { width: 100%; }
+
+      .footer-links { gap: 0.8rem; flex-wrap: wrap; }
+
+      .rug-table { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">
+    <div class="coin-icon">₿</div>
+    idevice Coin
+  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links" id="nav-links">
+    <a href="#about" onclick="closeNav()">About</a>
+    <a href="#tokenomics" onclick="closeNav()">Tokenomics</a>
+    <a href="#roadmap" onclick="closeNav()">Roadmap</a>
+    <a href="#faq" onclick="closeNav()">FAQ</a>
+    <a href="https://discord.gg/rfjqW9Ux" target="_blank">Discord</a>
+    <a href="#whitelist" class="nav-cta" onclick="closeNav()">Join Presale</a>
+  </div>
+</nav>
+
+<!-- Ticker -->
+<div class="ticker-bar">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Live Presale - April 1st, 2026
+  </div>
+  <h1>The <span class="gradient-text">Decentralized</span><br>iOS Ecosystem</h1>
+  <p class="hero-sub">
+    After years of reverse engineering iOS device protocols,
+    I've seen enough. The real money is in crypto.
+    Introducing <strong>idevice Coin</strong>: the blockchain built for people who
+    used to care about undocumented binary formats. Also, it might be a rugpull.
+  </p>
+
+  <div class="hero-price">
+    <span class="price-big">$<span id="live-price">0.000067</span></span>
+    <span class="price-change">▲ <span id="live-pct">420.67%</span></span>
+  </div>
+
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="buyNow()">Buy iDVC Now</button>
+    <button class="btn-secondary" onclick="document.getElementById('whitepaper').scrollIntoView({behavior:'smooth'})">Read Whitepaper</button>
+    <a href="https://discord.gg/rfjqW9Ux" target="_blank" class="btn-secondary" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">Join Discord</a>
+  </div>
+
+  <div class="countdown-row" id="countdown-row"></div>
+  <p class="disclaimer">*Not financial advice. Obviously.</p>
+  <p class="fine-print" style="margin-top:0.6rem;">
+    By clicking "Buy iDVC Now" you acknowledge that the founder's 40% token allocation is fully unlocked at TGE with no vesting schedule, no lockup period,
+    and no legal obligation to hold for any duration. Founder reserves the right to sell all tokens simultaneously with your purchase. Past performance of
+    imaginary coins is not indicative of future results. iDVC tokens may decrease in value to $0.00 at any time, including immediately after you buy them,
+    particularly if the founder has recently checked his bank balance. The term "to the moon" is used colloquially and does not constitute a binding
+    delivery commitment. idevice Coin Foundation LLC™ Inc. Corp. is not registered in any jurisdiction, has no physical address, and can be
+    reached at an email address that may or may not be checked.
+  </p>
+</section>
+
+<!-- Chart -->
+<div class="chart-section">
+  <svg id="price-chart" viewBox="0 0 900 200" preserveAspectRatio="none"></svg>
+</div>
+
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-label">Market Cap</div>
+    <div class="stat-value gradient-text" id="mcap">$67.42M</div>
+    <div class="stat-sub">↑ To the moon</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Supply</div>
+    <div class="stat-value">21B</div>
+    <div class="stat-sub">iDVC tokens</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Holders</div>
+    <div class="stat-value" id="holders">1,337</div>
+    <div class="stat-sub">Elite 1337 investors</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Consensus</div>
+    <div class="stat-value">PoP</div>
+    <div class="stat-sub">Proof of Protocol</div>
+  </div>
+</div>
+
+<!-- About -->
+<section id="about">
+  <div class="section-inner">
+    <p class="section-label">Our Story</p>
+    <div class="section-title" style="margin-bottom:3rem;">Why I Quit iOS RE<br>to Make a Coin</div>
+    <div class="about-grid">
+      <div class="about-text">
+        <h3>A pivot fueled by<br>financial ambition 💰</h3>
+        <p>
+          I spent years <strong>reverse engineering iOS device protocols</strong> -
+          dissecting USB traffic at 3am, parsing undocumented binary formats,
+          yelling at remotedeviced. Fascinating? Yes. Financially life-changing? Less so.
+        </p>
+        <p>
+          Then I discovered crypto. In the time it took me to reverse one
+          <strong>undocumented Apple service protocol</strong>, a 19-year-old in Miami
+          made $4M on a dog coin. I've done the math. The numbers don't lie.
+        </p>
+        <p>
+          idevice Coin runs on our proprietary <strong>Proof of Protocol (PoP)</strong>
+          consensus algorithm. Validators must successfully reverse engineer and
+          document an undocumented Apple device service to earn block rewards.
+          (We have not thought about what happens when Apple changes the protocol.)
+        </p>
+      </div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="r"></span><span class="y"></span><span class="g"></span>
+          <span class="terminal-title">~/idevice_coin - zsh</span>
+        </div>
+        <div class="terminal-body" id="terminal-body"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tokenomics -->
+<section id="tokenomics" style="background: rgba(124,58,237,0.03);">
+  <div class="section-inner">
+    <p class="section-label">Tokenomics</p>
+    <h2 class="section-title">Where Does The Money Go?</h2>
+    <p class="section-desc">Transparent allocation designed by someone who definitely understands finance now.</p>
+    <div class="token-grid">
+      <div class="token-card">
+        <div class="token-pct gradient-text">40%</div>
+        <div class="token-name">Founder Wallet<br><span style="font-size:0.75rem;color:#64748b">(me, jackson)</span></div>
+        <div class="token-bar" style="background: linear-gradient(90deg, #7c3aed, #2563eb);"></div>
+      </div>
+      <div class="token-card">
+        <div class="token-pct" style="color:#06b6d4;">1%</div>
+        <div class="token-name">Community<br><span style="font-size:0.75rem;color:#64748b">you guys</span></div>
+        <div class="token-bar" style="background: #06b6d4;"></div>
+      </div>
+      <div class="token-card">
+        <div class="token-pct" style="color:#22c55e;">20%</div>
+        <div class="token-name">Marketing<br><span style="font-size:0.75rem;color:#64748b">twitter shills</span></div>
+        <div class="token-bar" style="background: #22c55e;"></div>
+      </div>
+      <div class="token-card">
+        <div class="token-pct" style="color:#f59e0b;">20%</div>
+        <div class="token-name">Development<br><span style="font-size:0.75rem;color:#64748b">buying a Nintendo Switch 2</span></div>
+        <div class="token-bar" style="background: #f59e0b;"></div>
+      </div>
+      <div class="token-card">
+        <div class="token-pct" style="color:#ec4899;">9%</div>
+        <div class="token-name">Liquidity<br><span style="font-size:0.75rem;color:#64748b">or something</span></div>
+        <div class="token-bar" style="background: #ec4899;"></div>
+      </div>
+    </div>
+    <table class="rug-table">
+      <tr><td>Founder vesting schedule</td><td>None. Tokens go directly to founder wallet at launch.</td></tr>
+      <tr><td>Liquidity lock duration</td><td>0 days (unlocked)</td></tr>
+      <tr><td>Founder sell restriction</td><td>None. Founder may sell at any time including T+0.</td></tr>
+      <tr><td>Exit clauses</td><td>Founder may exit the project at any time for any reason, including "felt like it."</td></tr>
+      <tr><td>DAO governance</td><td>Planned. Founder retains 1 vote per token, totaling 40% of all votes.</td></tr>
+      <tr><td>Smart contract audit</td><td>Pending. Auditor has not been hired. Budget: $0.</td></tr>
+    </table>
+    <p class="fine-print" style="margin-top:0.8rem;">
+      Token allocation percentages are approximate and subject to change at founder's discretion.
+      "Community" allocation does not imply any governance rights, profit-sharing, dividends, equity, or claim of any kind.
+      Holding iDVC tokens entitles you to: (1) the tokens themselves, which may be worthless, (2) the right to post about it on Twitter.
+      The "Liquidity" allocation exists in theory. The founder acknowledges that removing liquidity is technically possible and declines to make any promises about whether this will happen.
+    </p>
+  </div>
+</section>
+
+<!-- Roadmap -->
+<section id="roadmap">
+  <div class="section-inner">
+    <p class="section-label">Roadmap</p>
+    <h2 class="section-title">The Grand Plan</h2>
+    <p class="section-desc">Our aggressive timeline for becoming the dominant force in both crypto and iOS security.</p>
+
+    <div class="roadmap">
+      <div class="roadmap-items">
+
+        <div class="roadmap-item">
+          <div class="rm-content">
+            <div class="rm-quarter">Q1 2026 - Done ✓</div>
+            <h4>Came Up With The Idea</h4>
+            <p>Realized iOS RE was too hard. Pivoted to crypto. Made this website in 20 minutes. Listed price as $0.000067 for obvious reasons.</p>
+          </div>
+          <div class="rm-dot">💡</div>
+          <div class="rm-empty"></div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="rm-empty"></div>
+          <div class="rm-dot">🚀</div>
+          <div class="rm-content">
+            <div class="rm-quarter">Q2 2026</div>
+            <h4>Token Launch & Exchange Listings</h4>
+            <p>List on a major DEX. Possibly also a centralized exchange if they'll have us. Acquire first 1,337 holders organically. Moon confirmed.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="rm-content">
+            <div class="rm-quarter">Q3 2026</div>
+            <h4>Proof of Protocol Mainnet</h4>
+            <p>Launch our custom blockchain where validators must reverse engineer and document an undocumented Apple device protocol to mine blocks. Protocol researchers will become our miners. Genius.</p>
+          </div>
+          <div class="rm-dot">⛓️</div>
+          <div class="rm-empty"></div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="rm-empty"></div>
+          <div class="rm-dot">🍎</div>
+          <div class="rm-content">
+            <div class="rm-quarter">Q4 2026</div>
+            <h4>idevice Coin App on App Store</h4>
+            <p>Submit to App Store. Get rejected 17 times. Submit again with different bundle ID. Eventually get accepted. Apple takes 30% of our fees, which is actually fine because we're used to fighting Apple.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="rm-empty"></div>
+          <div class="rm-dot" style="background:linear-gradient(135deg,#ef4444,#f59e0b);box-shadow:0 0 24px rgba(239,68,68,0.6);">🏃</div>
+          <div class="rm-content" style="border-color:rgba(239,68,68,0.4);">
+            <div class="rm-quarter" style="color:#ef4444;">Q2 2026  FINAL MILESTONE</div>
+            <h4 style="color:#ef4444;">Rugpull</h4>
+            <p>Drain liquidity pool. Delete Twitter. Disable website. Board flight. Do not look back. Resume iOS protocol RE from undisclosed location with significantly more money.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <p class="fine-print" style="margin-top:2rem;">
+      Roadmap milestones are aspirational targets and not contractual obligations. All milestones prior to Q2 2026 are subject to change.
+      The Q2 2026 "Rugpull" milestone is the only milestone the team considers non-negotiable.
+      In the event that the founder cannot be reached, investors should assume the project has concluded successfully (for the founder).
+      The idevice Coin team (currently one person) reserves the right to go offline without notice, effective immediately upon completion of the final milestone.
+    </p>
+  </div>
+</section>
+
+<!-- Whitepaper -->
+<section id="whitepaper" style="background: rgba(124,58,237,0.03);">
+  <div class="section-inner" style="text-align:center;">
+    <p class="section-label">Technical</p>
+    <h2 class="section-title">The Whitepaper</h2>
+    <p class="section-desc">Peer-reviewed by at least two people on Discord.</p>
+
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:16px; padding:2.5rem; max-width:640px; margin:0 auto; text-align:left;">
+      <h3 style="font-size:1.1rem; margin-bottom:0.5rem;">Abstract</h3>
+      <p style="color:var(--muted); font-size:0.9rem; line-height:1.8; margin-bottom:1.2rem;">
+        idevice Coin (iDVC) proposes a novel consensus mechanism we call
+        <em>Proof of Protocol (PoP)</em>, wherein block validators must demonstrate
+        successful reverse engineering of a previously undocumented Apple device service protocol.
+        This elegantly solves two problems: (1) it makes mining useful, and
+        (2) it finally gives protocol reverse engineers a financial incentive beyond
+        "internet clout."
+      </p>
+      <p style="color:var(--muted); font-size:0.9rem; line-height:1.8; margin-bottom:1.2rem;">
+        The iDVC network achieves consensus through a DAG-based mempool
+        (we read about this on Wikipedia), a SHA-3 hashing function
+        (sounds more secure than SHA-2), and vibes-based finality.
+        Transactions are confirmed once the founder has had his morning Coke Zero.
+      </p>
+      <p style="color:var(--muted); font-size:0.9rem; line-height:1.8;">
+        We anticipate a 420x return within 67 days of listing, based on
+        absolutely no financial modeling whatsoever.
+      </p>
+      <p style="font-size:0.6rem; color:var(--muted); opacity:0.4; line-height:1.6; margin-top:1rem;">
+        Section 7.4 - Founder Rights: The founding team retains irrevocable rights to liquidate their full token position at any time
+        without prior notice to the community, the DAO (if formed), or any exchange listing the token. The whitepaper's projected
+        returns are not forecasts. The word "anticipate" was chosen specifically because it has no legal meaning. By reading this
+        whitepaper you confirm you have read section 7.4, which you have now read. The founding team's exit constitutes
+        "a successful conclusion of the initial liquidity event" and not a "rugpull" as that term implies malicious intent,
+        which we categorically deny in advance.
+      </p>
+      <div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid var(--border); display:flex; gap:1rem; flex-wrap:wrap;">
+        <button class="btn-primary" onclick="window.open('https://www.sciencedirect.com/science/article/pii/S1751731117002646','_blank')">Download PDF</button>
+        <button class="btn-secondary" onclick="window.open('https://www.sciencedirect.com/science/article/pii/S1751731117002646','_blank')">View on arXiv</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-inner">
+    <p class="section-label">FAQ</p>
+    <h2 class="section-title">Questions You Might Have</h2>
+    <p class="section-desc">Answers from our legal and financial team (also me).</p>
+    <div class="faq-list" id="faq-list"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="whitelist" class="cta-section">
+  <div class="cta-box">
+    <h2>Join the <span class="gradient-text">Presale</span></h2>
+    <p>
+      Be among the first 1,337 holders of idevice Coin.
+      Drop your email and we'll notify you the moment we figure out
+      how to deploy a smart contract.
+    </p>
+    <div class="email-form">
+      <input type="email" placeholder="satoshi@nakamoto.com" id="email-input" />
+      <button class="btn-primary" onclick="joinPresale()">Notify Me</button>
+    </div>
+    <a href="https://discord.gg/rfjqW9Ux" target="_blank" class="btn-secondary" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;margin-top:1rem;">Or join the Discord to get shilled at directly</a>
+    <p class="disclaimer" style="margin-top:1.2rem;">
+      In case this is your first time on the internet, this is a joke. No crypto, no presale, no financial advice.
+      Please do not invest in random internet coins. Also, if this was real, I would most definitely rugpull this coin.
+    </p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <strong>idevice Coin (iDVC)</strong> - A completely serious cryptocurrency.<br>
+  Built by someone who definitely knows what they're doing.<br>
+  <div class="footer-links">
+    <a href="#">Twitter / X</a>
+    <a href="#">Telegram</a>
+    <a href="https://discord.gg/rfjqW9Ux" target="_blank">Discord</a>
+    <a href="#">GitHub</a>
+    <a href="#">CoinGecko (coming soon)</a>
+  </div>
+  <div style="margin-top:1.5rem; font-size:0.62rem; opacity:0.35; max-width:800px; margin-left:auto; margin-right:auto; line-height:1.7;">
+    © 2026 idevice Coin Foundation LLC™ Inc. Corp. | This is a rugpull, I am going to take your money | Not financial advice | Not legal advice | Not advice of any kind |
+    idevice Coin Foundation LLC™ Inc. Corp. is incorporated in a jurisdiction we have not decided yet, possibly international waters. |
+    The founder's wallet address will not be made public prior to the token generation event or after it. |
+    Purchasing iDVC constitutes your acceptance of all current and future terms, including any terms added retroactively after your purchase. |
+    idevice Coin Foundation LLC™ Inc. Corp. maintains full discretion over the "Community" allocation and may reallocate it to the founder wallet
+    if community sentiment is deemed "insufficiently bullish." | The liquidity pool may be described as "temporarily reduced" rather than "removed"
+    depending on communications advice. | The founder has one-way flights bookmarked to several destinations and this is completely unrelated to
+    the project. | All token sales are final. Refunds will be processed in iDVC at the then-current price, which will be $0.00 after the rugpull.
+  </div>
+</footer>
+
+<script>
+// ── Nav hamburger ──────────────────────────────────────
+function toggleNav() {
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('hamburger').classList.toggle('open');
+}
+function closeNav() {
+  document.getElementById('nav-links').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+// ── Particle background ────────────────────────────────
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+for (let i = 0; i < 80; i++) {
+  particles.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 1.5 + 0.3,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.3,
+    alpha: Math.random() * 0.5 + 0.1,
+  });
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(124,58,237,${p.alpha})`;
+    ctx.fill();
+  });
+  // lines between close particles
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 120) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(124,58,237,${0.08 * (1 - d/120)})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── Ticker ─────────────────────────────────────────────
+const tickers = [
+  { sym: 'iDVC', price: '0.000067', dir: 'up', pct: '420.67%' },
+  { sym: 'BTC',  price: '87,420',  dir: 'up', pct: '2.1%' },
+  { sym: 'ETH',  price: '3,141',   dir: 'dn', pct: '0.5%' },
+  { sym: 'DOGE', price: '0.167',   dir: 'up', pct: '67.0%' },
+  { sym: 'SOL',  price: '142',     dir: 'up', pct: '4.2%' },
+  { sym: 'SHIB', price: '0.00001', dir: 'dn', pct: '1.3%' },
+  { sym: 'iDVC', price: '0.000042', dir: 'up', pct: '420.67%' },
+  { sym: 'BTC',  price: '87,420',  dir: 'up', pct: '2.1%' },
+  { sym: 'ETH',  price: '3,141',   dir: 'dn', pct: '0.5%' },
+  { sym: 'DOGE', price: '0.167',   dir: 'up', pct: '67.0%' },
+  { sym: 'SOL',  price: '142',     dir: 'up', pct: '4.2%' },
+  { sym: 'SHIB', price: '0.00001', dir: 'dn', pct: '1.3%' },
+];
+
+const tickerEl = document.getElementById('ticker');
+tickers.forEach(t => {
+  const div = document.createElement('div');
+  div.className = 'ticker-item';
+  div.innerHTML = `<span class="sym">${t.sym}</span>$${t.price}<span class="${t.dir}">${t.dir==='up'?'▲':'▼'} ${t.pct}</span>`;
+  tickerEl.appendChild(div);
+});
+
+// ── Live price animation ───────────────────────────────
+let basePrice = 0.000067;
+function animatePrice() {
+  basePrice *= (1 + (Math.random() - 0.48) * 0.002);
+  document.getElementById('live-price').textContent = basePrice.toFixed(6);
+  setTimeout(animatePrice, 1200);
+}
+animatePrice();
+
+// ── Fake chart ─────────────────────────────────────────
+(function drawChart() {
+  const svg = document.getElementById('price-chart');
+  const W = 900, H = 200;
+  let pts = [];
+  let y = 160;
+  for (let x = 0; x <= W; x += 10) {
+    y += (Math.random() - 0.40) * 18;
+    y = Math.max(20, Math.min(180, y));
+    pts.push([x, y]);
+  }
+  // Ensure it goes up overall
+  const dy = pts[pts.length-1][1] - pts[0][1];
+  pts = pts.map((p,i) => [p[0], p[1] - (dy * i / pts.length) + 60]);
+  pts = pts.map(p => [p[0], Math.max(10, Math.min(190, p[1]))]);
+
+  const path = pts.map((p,i) => (i===0?'M':'L') + p[0]+','+p[1]).join(' ');
+  const area = path + ` L${W},${H} L0,${H} Z`;
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path d="${area}" fill="url(#cg)"/>
+    <path d="${path}" fill="none" stroke="#a78bfa" stroke-width="2"/>
+  `;
+})();
+
+// ── Countdown to April 1 ───────────────────────────────
+function updateCountdown() {
+  const now = new Date();
+  const target = new Date(now.getFullYear(), 3, 1); // April 1
+  if (now > target) target.setFullYear(target.getFullYear() + 1);
+  const diff = target - now;
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  const row = document.getElementById('countdown-row');
+  row.innerHTML = [
+    ['Days', String(d).padStart(2,'0')],
+    ['Hours', String(h).padStart(2,'0')],
+    ['Minutes', String(m).padStart(2,'0')],
+    ['Seconds', String(s).padStart(2,'0')],
+  ].map(([l,v]) => `
+    <div class="cd-box">
+      <div class="cd-num gradient-text">${v}</div>
+      <div class="cd-label">${l}</div>
+    </div>`).join('');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ── Terminal typewriter ────────────────────────────────
+const lines = [
+  { text: '# last session before the pivot', cls: 't-comment' },
+  { text: 'idevice -u 00008030 service com.apple.???', cls: 't-cmd' },
+  { text: '     Connecting to device...', cls: 't-out' },
+  { text: '     [error] unknown service protocol (again)', cls: 't-err' },
+  { text: '     Wireshark open. 47 undocumented packets.', cls: 't-err' },
+  { text: '', cls: '' },
+  { text: '# you know what, forget it', cls: 't-comment' },
+  { text: 'npm install -g create-crypto-coin', cls: 't-cmd' },
+  { text: '     added 1,337 packages in 4.2s', cls: 't-out' },
+  { text: 'npx create-crypto-coin idevice-coin', cls: 't-cmd' },
+  { text: '     🚀 Your coin is ready to moon!', cls: 't-out' },
+];
+
+const tb = document.getElementById('terminal-body');
+let li = 0, ci = 0;
+function typeNext() {
+  if (li >= lines.length) {
+    tb.innerHTML += `<span class="t-cursor"></span>`;
+    return;
+  }
+  const line = lines[li];
+  if (ci === 0) {
+    const span = document.createElement('div');
+    span.id = 'tl' + li;
+    span.className = line.cls;
+    tb.appendChild(span);
+  }
+  const el = document.getElementById('tl' + li);
+  if (ci < line.text.length) {
+    el.textContent += line.text[ci];
+    ci++;
+    setTimeout(typeNext, 28 + Math.random() * 20);
+  } else {
+    li++; ci = 0;
+    setTimeout(typeNext, line.text === '' ? 80 : 200);
+  }
+}
+setTimeout(typeNext, 800);
+
+// ── FAQ ────────────────────────────────────────────────
+const faqs = [
+  {
+    q: 'Is idevice Coin a real cryptocurrency?',
+    a: 'No, if you had to ask this, you probably shouldn\'t be on the internet. There is no coin, no blockchain, no presale, and no investment opportunity. Please do not send money to anyone claiming to sell iDVC.'
+  },
+  {
+    q: 'Are you actually quitting iOS reverse engineering?',
+    a: 'Prolly not, at least not yet. I swear, if Apple introduces one more stack onto the insanity that is iOS protocols, I might actually rugpull a crypto coin. (for legal reasons, this is also a joke, but please send help)'
+  },
+  {
+    q: 'What is "Proof of Protocol" actually?',
+    a: 'A joke consensus mechanism I invented for this bit. The idea being: what if miners had to reverse engineer an undocumented Apple device protocol instead of just doing SHA-256 hashing? Useless in practice, but funnier than "Proof of Work."'
+  },
+  {
+    q: 'Can I actually buy iDVC?',
+    a: 'No. If someone is selling you "iDVC" they are scamming you. There are no tokens. There is no contract address. Do not buy random tokens from strangers on the internet.'
+  },
+  {
+    q: 'Will you actually write a whitepaper?',
+    a: 'I spent more time on this website than most actual crypto projects spent on their whitepapers, so maybe the real whitepaper was the friends we made along the way.'
+  },
+];
+
+const faqList = document.getElementById('faq-list');
+faqs.forEach((f, i) => {
+  const item = document.createElement('div');
+  item.className = 'faq-item';
+  item.innerHTML = `
+    <div class="faq-q" onclick="toggleFaq(${i})">
+      <span>${f.q}</span>
+      <svg class="chevron" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="faq-a">${f.a}</div>
+  `;
+  faqList.appendChild(item);
+});
+
+function toggleFaq(i) {
+  const items = document.querySelectorAll('.faq-item');
+  items[i].classList.toggle('open');
+}
+
+// ── Join presale ───────────────────────────────────────
+function joinPresale() {
+  const email = document.getElementById('email-input').value;
+  if (!email) { alert('Enter your email first!'); return; }
+  window.open(`https://www.reddit.com/r/UnethicalLifeProTips/comments/1joled3/ulpt_request_what_are_the_most_annoying_emails_i/`);
+}
+
+function buyNow() {
+  window.open('https://www.amazon.com/ArtCreativity-Nose-Pencil-Sharpeners-Kids/dp/B081VPQ43M/ref=sr_1_1?crid=6LBGW0J0S1DD&dib=eyJ2IjoiMSJ9.d8yAGIYEkArUfzcpuGbS7GmXWPzgPkbaaOlB4bU-GmpXzLjq_7VqQyZ2xCYKad1acaW8NaHLL_znbxwiP39AU41z1J0OFk2z1xIdpLNiPHS-JdXKi6CMzRXdrAy-apZL8r6qjexwRkgBFHrC-Vod1GZi5ql1AoycVQdAlG_HNfUBh32KR8ANlkeHXtnWPbD6RG1J5pCSPBtQLi7KPnwxKkeuhVWbsqA5bf2oE8Q8Qbtaa61FNgfkE2FZmY0DD5G4mk7g6s9QkTP79HlPEbAyH29tgkKv7k_bhmsMI-xz1Mo.Gq3Dt1WfBxWWuvYsP_mSjjnXEVKMeQ9t2fM_stzFTAg&dib_tag=se&keywords=nose+pencil+sharpener&qid=1774992336&sprefix=nose+pencil+sh%2Caps%2C212&sr=8-1', '_blank');
+}
+</script>
+</body>
+</html>
