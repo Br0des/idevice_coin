@@ -37,6 +37,30 @@ MOON_MESSAGES = [
         "💹 GET IN NOW",
         "iDVC mooning!! +{pct}%\nIf you don't buy you will regret it forever probably.",
     ),
+    (
+        "🚀 BREAKING: iDVC PUMPING",
+        "Up {pct}%! Our quant team ran the numbers and the numbers said 'yes'. That's all we have.",
+    ),
+    (
+        "📊 Price Alert",
+        "iDVC +{pct}%. The founder is still in his chair. He has not stood up. Very bullish.",
+    ),
+    (
+        "🔥 IT'S HAPPENING",
+        "iDVC up {pct}%! A financial advisor somewhere just got a very concerning text from their client.",
+    ),
+    (
+        "🌙 LUNAR TRAJECTORY CONFIRMED",
+        "Up {pct}%! NASA has not responded to our partnership proposal but we remain optimistic.",
+    ),
+    (
+        "💎 Diamond Hands Printing",
+        "iDVC +{pct}%. The people who didn't buy last week are now staring at their screen in silence.",
+    ),
+    (
+        "⚡ SURGE DETECTED",
+        "iDVC up {pct}%! We have no explanation. The chart just decided. Respect the chart.",
+    ),
 ]
 
 DIP_MESSAGES = [
@@ -63,6 +87,30 @@ DIP_MESSAGES = [
     (
         "😭 Don't Panic Sell",
         "iDVC down {pct}%. The founder is NOT currently at an airport.",
+    ),
+    (
+        "📉 Temporary Setback",
+        "iDVC -{pct}%. The founder has issued a statement: 'lol'. Full statement to follow.",
+    ),
+    (
+        "🩸 Liquidity Event",
+        "iDVC down {pct}%. We are calling this a 'planned volatility window.' It was not planned.",
+    ),
+    (
+        "😬 Minor Correction",
+        "iDVC -{pct}%. This is fine. The founder is fine. Everything is fine. Please do not check his location.",
+    ),
+    (
+        "🔻 Shakeout Complete",
+        "Down {pct}%. The weak hands have been eliminated. Welcome to the strong hand zone. Stay strong.",
+    ),
+    (
+        "💀 Healthy Accumulation Phase",
+        "iDVC -{pct}%. Price going down means more coins per dollar. This is called 'math.' Buy more.",
+    ),
+    (
+        "🧘 Zen Mode",
+        "iDVC down {pct}%. Breathe. The founder is breathing. Probably. His read receipts are off.",
     ),
 ]
 
@@ -190,6 +238,46 @@ WIN_MESSAGES = [
     (
         "🎤 Community Spotlight",
         "{mention} you have been selected as this minute's iDVC Community Member of the Minute!\nPrize: free tokens. Runner up prize: also free tokens.",
+    ),
+    (
+        "🎪 Congratulations, Probably",
+        "{mention} our system flagged your wallet as 'extremely promising.' Your wallet does not exist yet. Still promising.",
+    ),
+    (
+        "📡 Signal Detected",
+        "{mention} our proprietary AI detected that you are destined for iDVC greatness. The AI is a coin flip. Tails = you. You got tails.",
+    ),
+    (
+        "🏦 Wealth Transfer Incoming",
+        "{mention} a significant wealth transfer is about to occur in the iDVC ecosystem. Mostly toward the founder. You get free tokens.",
+    ),
+    (
+        "🎲 You Have Been Chosen",
+        "{mention} out of all possible random outcomes, you were selected. This means nothing statistically. Claim your tokens.",
+    ),
+    (
+        "🦅 Freedom Awaits",
+        "{mention} iDVC is the path to financial freedom. The path is unpaved, unlit, and may end in a ditch. Free tokens at the link.",
+    ),
+    (
+        "🕐 Act Within The Next 0 Seconds",
+        "{mention} this offer expires IMMEDIATELY. It has already expired. Claim it anyway. Time is fake.",
+    ),
+    (
+        "🔮 The Algorithm Has Spoken",
+        "{mention} our advanced selection algorithm chose you. The algorithm is `random.choice()` with your name in a list of everyone. Very advanced.",
+    ),
+    (
+        "💼 Due Diligence Complete",
+        "{mention} our team has completed a thorough review of your qualifications. We checked if you were online. You were. Tokens await.",
+    ),
+    (
+        "🌊 Ride The Wave",
+        "{mention} a massive iDVC wave is coming. Surfers say 'catch it or get crashed by it.' We are not surfers. Claim your free tokens.",
+    ),
+    (
+        "🤖 Bot-Verified Human",
+        "{mention} our systems have confirmed you are probably a human. Humans get free iDVC. Claim before we reconsider.",
     ),
 ]
 
